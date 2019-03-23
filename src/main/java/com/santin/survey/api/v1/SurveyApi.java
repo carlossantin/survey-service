@@ -47,15 +47,13 @@ public class SurveyApi {
                                                        @RequestBody SessionInput sessionInput) {
         final QuestionDto question = surveyService.getQuestion(idQuestion);
 
-        SessionDto sessionDto = new SessionDto();
-        sessionDto.setDescription(sessionInput.getDescription());
-        sessionDto.setFinishDateTime(sessionInput.getFinishDateTime());
-        sessionDto.setStartDateTime(sessionInput.getStartDateTime());
+        SessionDto sessionDto = objectMapper.convertValue(sessionInput, SessionDto.class);
         sessionDto.setQuestion(question);
 
         sessionDto = surveyService.createSession(sessionDto);
 
-        return ResponseEntity.ok(objectMapper.convertValue(sessionDto, SessionOutput.class));
+        SessionOutput sessionOutput = objectMapper.convertValue(sessionDto, SessionOutput.class);
+        return ResponseEntity.ok(sessionOutput);
     }
 
     private void validateErrors(BindingResult result) {
@@ -63,4 +61,5 @@ public class SurveyApi {
             throw new InputValidationException(result.getAllErrors().get(0).getDefaultMessage());
         }
     }
+
 }

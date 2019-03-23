@@ -8,8 +8,10 @@ import com.santin.survey.entity.Session;
 import com.santin.survey.exception.QuestionNotFoundException;
 import com.santin.survey.repository.QuestionRepository;
 import com.santin.survey.repository.SessionRepository;
+import com.santin.survey.validation.SessionValidation;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Optional;
 
 @Service
@@ -18,6 +20,8 @@ public class SurveyService {
     private final QuestionRepository questionRepository;
     private final SessionRepository sessionRepository;
     private final ObjectMapper objectMapper;
+
+    private static final long DEFAULT_SESSION_DURATION_SECONDS = 60L;
 
     public SurveyService(final QuestionRepository questionRepository,
                          final SessionRepository sessionRepository,
@@ -42,8 +46,19 @@ public class SurveyService {
     }
 
     public SessionDto createSession(final SessionDto sessionDto) {
+        fixSessionStartAndFinishTimes(sessionDto);
+
+        SessionValidation.validateSessionDto(sessionDto);
+
         Session session = objectMapper.convertValue(sessionDto, Session.class);
         session = sessionRepository.save(session);
         return objectMapper.convertValue(session, SessionDto.class);
+    }
+
+    private void fixSessionStartAndFinishTimes(SessionDto sessionDto) {
+        sessionDto.setStartDateTime(Optional.ofNullable(sessionDto.getStartDateTime())
+                .orElse(Instant.now()));
+        sessionDto.setFinishDateTime(Optional.ofNullable(sessionDto.getFinishDateTime())
+                .orElse(sessionDto.getStartDateTime().plusSeconds(DEFAULT_SESSION_DURATION_SECONDS)));
     }
 }

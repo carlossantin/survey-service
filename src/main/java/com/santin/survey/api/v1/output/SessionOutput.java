@@ -18,12 +18,12 @@ public class SessionOutput {
         this.id = id;
     }
 
-    public QuestionOutput getQuestionId() {
+    public QuestionOutput getQuestion() {
         return question;
     }
 
-    public void setQuestionId(QuestionOutput questionId) {
-        this.question = questionId;
+    public void setQuestion(QuestionOutput question) {
+        this.question = question;
     }
 
     public String getDescription() {
