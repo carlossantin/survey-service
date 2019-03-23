@@ -2,7 +2,7 @@ package com.santin.survey.builder;
 
 import com.santin.survey.dto.SessionDto;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 public class SessionDtoBuilder {
 
@@ -11,13 +11,13 @@ public class SessionDtoBuilder {
 
         public Builder() {
             sessionDto.setDescription("Description");
-            sessionDto.setStartDateTime(Instant.now());
+            sessionDto.setStartDateTime(LocalDateTime.now());
             sessionDto.setFinishDateTime(sessionDto.getStartDateTime().plusSeconds(60));
             sessionDto.setId(1L);
             sessionDto.setQuestion(new QuestionDtoBuilder.Builder().build());
         }
 
-        public Builder withFinishDateTime(Instant datetime){
+        public Builder withFinishDateTime(LocalDateTime datetime){
             sessionDto.setFinishDateTime(datetime);
             return this;
         }

@@ -1,10 +1,13 @@
 package com.santin.survey.api.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.santin.survey.api.v1.input.AnswerInput;
 import com.santin.survey.api.v1.input.QuestionInput;
 import com.santin.survey.api.v1.input.SessionInput;
+import com.santin.survey.api.v1.output.AnswerOutput;
 import com.santin.survey.api.v1.output.QuestionOutput;
 import com.santin.survey.api.v1.output.SessionOutput;
+import com.santin.survey.dto.AnswerDto;
 import com.santin.survey.dto.QuestionDto;
 import com.santin.survey.dto.SessionDto;
 import com.santin.survey.exception.InputValidationException;
@@ -33,7 +36,7 @@ public class SurveyApi {
     }
 
     @PostMapping("/questions/create")
-    @ApiOperation(value = "Create a new question to be used in a survey session")
+    @ApiOperation(value = "Creates a new question to be used in a survey session")
     public ResponseEntity<QuestionOutput> createQuestion(@RequestBody @Valid QuestionInput question, BindingResult result) {
         validateErrors(result);
 
@@ -42,7 +45,7 @@ public class SurveyApi {
     }
 
     @PostMapping("/questions/{id}/sessions/create")
-    @ApiOperation(value = "Create a new session for an issue to be voted by associates")
+    @ApiOperation(value = "Creates a new session for an issue to be voted by associates")
     public ResponseEntity<SessionOutput> createSession(@PathVariable("id") Long idQuestion,
                                                        @RequestBody SessionInput sessionInput) {
         final QuestionDto question = surveyService.getQuestion(idQuestion);
@@ -52,8 +55,21 @@ public class SurveyApi {
 
         sessionDto = surveyService.createSession(sessionDto);
 
-        SessionOutput sessionOutput = objectMapper.convertValue(sessionDto, SessionOutput.class);
-        return ResponseEntity.ok(sessionOutput);
+        return ResponseEntity.ok(objectMapper.convertValue(sessionDto, SessionOutput.class));
+    }
+
+    @PostMapping("/sessions/vote")
+    @ApiOperation(value = "Allows an associate to vote for a question related to an opened session")
+    public ResponseEntity<AnswerOutput> voteQuestion(@RequestBody @Valid AnswerInput answerInput, BindingResult result) {
+        validateErrors(result);
+        final SessionDto session = surveyService.getSession(answerInput.getSessionId());
+
+        AnswerDto answerDto = objectMapper.convertValue(answerInput, AnswerDto.class);
+        answerDto.setSession(session);
+
+        AnswerDto vote = surveyService.vote(answerDto);
+
+        return ResponseEntity.ok(objectMapper.convertValue(vote, AnswerOutput.class));
     }
 
     private void validateErrors(BindingResult result) {

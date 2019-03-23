@@ -8,7 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "session")
@@ -22,10 +23,10 @@ public class Session {
     private String description;
 
     @Column
-    private Instant startDateTime;
+    private LocalDateTime startDateTime;
 
     @Column
-    private Instant finishDateTime;
+    private LocalDateTime finishDateTime;
 
     @ManyToOne
     @JoinColumn(name = "question_id")
@@ -47,19 +48,19 @@ public class Session {
         this.description = description;
     }
 
-    public Instant getStartDateTime() {
+    public LocalDateTime getStartDateTime() {
         return startDateTime;
     }
 
-    public void setStartDateTime(Instant startDateTime) {
+    public void setStartDateTime(LocalDateTime startDateTime) {
         this.startDateTime = startDateTime;
     }
 
-    public Instant getFinishDateTime() {
+    public LocalDateTime getFinishDateTime() {
         return finishDateTime;
     }
 
-    public void setFinishDateTime(Instant finishDateTime) {
+    public void setFinishDateTime(LocalDateTime finishDateTime) {
         this.finishDateTime = finishDateTime;
     }
 
@@ -69,5 +70,22 @@ public class Session {
 
     public void setQuestion(Question question) {
         this.question = question;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Session session = (Session) o;
+        return Objects.equals(id, session.id) &&
+                Objects.equals(description, session.description) &&
+                Objects.equals(startDateTime, session.startDateTime) &&
+                Objects.equals(finishDateTime, session.finishDateTime) &&
+                Objects.equals(question, session.question);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, description, startDateTime, finishDateTime, question);
     }
 }

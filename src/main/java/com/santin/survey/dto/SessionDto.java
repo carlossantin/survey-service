@@ -1,14 +1,14 @@
 package com.santin.survey.dto;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 public class SessionDto {
 
     private Long id;
     private QuestionDto question;
     private String description;
-    private Instant startDateTime;
-    private Instant finishDateTime;
+    private LocalDateTime startDateTime;
+    private LocalDateTime finishDateTime;
 
     public Long getId() {
         return id;
@@ -34,19 +34,19 @@ public class SessionDto {
         this.description = description;
     }
 
-    public Instant getStartDateTime() {
+    public LocalDateTime getStartDateTime() {
         return startDateTime;
     }
 
-    public void setStartDateTime(Instant startDateTime) {
+    public void setStartDateTime(LocalDateTime startDateTime) {
         this.startDateTime = startDateTime;
     }
 
-    public Instant getFinishDateTime() {
+    public LocalDateTime getFinishDateTime() {
         return finishDateTime;
     }
 
-    public void setFinishDateTime(Instant finishDateTime) {
+    public void setFinishDateTime(LocalDateTime finishDateTime) {
         this.finishDateTime = finishDateTime;
     }
 }
