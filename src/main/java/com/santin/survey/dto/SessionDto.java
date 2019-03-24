@@ -1,6 +1,7 @@
 package com.santin.survey.dto;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class SessionDto {
 
@@ -48,5 +49,22 @@ public class SessionDto {
 
     public void setFinishDateTime(LocalDateTime finishDateTime) {
         this.finishDateTime = finishDateTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SessionDto that = (SessionDto) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(question, that.question) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(startDateTime, that.startDateTime) &&
+                Objects.equals(finishDateTime, that.finishDateTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, question, description, startDateTime, finishDateTime);
     }
 }
