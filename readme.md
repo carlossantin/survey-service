@@ -13,6 +13,37 @@ The goal of this project is to build a backend solution to perform surveys. This
  
 ## Running the application
  
+Before running the below commands, you must build the project by executing the following command:
+ 
+```
+gradlew build
+```
+
+To execute the application you need to have a MySQL instance running.
+If you have, you can launch the application passing the database URL by JVM parameter:
+
+Example:
+ 
+```
+gradlew bootRun -Dspring.datasource.url=jdbc:mysql://192.168.99.100:3306/surveydb
+```
+Then access using the following link:
+
+```
+http://localhost:8080
+```
+If you don't have an instance of mysql running, you can launch the application using docker-compose:
+ 
+```
+docker-compose build
+docker-compose up
+```
+
+Then access using the following link:
+
+```
+http://<YOUR-DOCKER-MACHINE-IP>:8080
+``` 
 
 ## Business decisions
 
