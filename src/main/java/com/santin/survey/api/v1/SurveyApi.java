@@ -48,7 +48,7 @@ public class SurveyApi {
         return ResponseEntity.ok(objectMapper.convertValue(surveyService.getAllQuestions(), new TypeReference<List<QuestionOutput>>(){}));
     }
 
-    @PostMapping("/questions/create")
+    @PostMapping("/questions")
     @ApiOperation(value = "Creates a new question to be used in a survey session")
     public ResponseEntity<QuestionOutput> createQuestion(@RequestBody @Valid QuestionInput question, BindingResult result) {
         validateErrors(result);
@@ -57,7 +57,7 @@ public class SurveyApi {
         return ResponseEntity.ok(objectMapper.convertValue(questionDto, QuestionOutput.class));
     }
 
-    @PostMapping("/questions/{id}/sessions/create")
+    @PostMapping("/questions/{id}/sessions")
     @ApiOperation(value = "Creates a new session for a question to be voted by associates. " +
             "A session must be related to a saved question. " +
             "The fields description, startDateTime and finishDateTime are optional. " +
@@ -82,11 +82,12 @@ public class SurveyApi {
         return ResponseEntity.ok(objectMapper.convertValue(questionResult, QuestionResultOutput.class));
     }
 
-    @PostMapping("/sessions/vote")
+    @PostMapping("/sessions/{id}/vote")
     @ApiOperation(value = "Allows an associate to vote for a question related to an opened session. The allowed values are SIM or NAO")
-    public ResponseEntity<AnswerOutput> voteQuestion(@RequestBody @Valid AnswerInput answerInput, BindingResult result) {
+    public ResponseEntity<AnswerOutput> voteQuestion(@PathVariable("id") Long sessionId,
+            @RequestBody @Valid AnswerInput answerInput, BindingResult result) {
         validateErrors(result);
-        final SessionDto session = surveyService.getSession(answerInput.getSessionId());
+        final SessionDto session = surveyService.getSession(sessionId);
 
         AnswerDto answerDto = objectMapper.convertValue(answerInput, AnswerDto.class);
         answerDto.setSession(session);

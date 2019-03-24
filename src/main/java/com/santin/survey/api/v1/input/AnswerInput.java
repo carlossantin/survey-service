@@ -7,8 +7,6 @@ public class AnswerInput {
 
     @NotNull(message = "The user id is mandatory")
     private Long userId;
-    @NotNull(message = "The session id is mandatory")
-    private Long sessionId;
     @NotBlank(message = "The answer value is mandatory")
     private String value;
 
@@ -18,14 +16,6 @@ public class AnswerInput {
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public Long getSessionId() {
-        return sessionId;
-    }
-
-    public void setSessionId(Long sessionId) {
-        this.sessionId = sessionId;
     }
 
     public String getValue() {
@@ -40,7 +30,6 @@ public class AnswerInput {
     public String toString() {
         return "{\"AnswerInput\":{"
                 + "\"userId\":\"" + userId + "\""
-                + ", \"sessionId\":\"" + sessionId + "\""
                 + ", \"value\":\"" + value + "\""
                 + "}}";
     }
