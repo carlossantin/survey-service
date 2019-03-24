@@ -6,15 +6,20 @@ import com.santin.survey.api.v1.input.QuestionInput;
 import com.santin.survey.api.v1.input.SessionInput;
 import com.santin.survey.api.v1.output.AnswerOutput;
 import com.santin.survey.api.v1.output.QuestionOutput;
+import com.santin.survey.api.v1.output.QuestionResultOutput;
 import com.santin.survey.api.v1.output.SessionOutput;
+import com.santin.survey.api.v1.output.SessionResultOutput;
 import com.santin.survey.dto.AnswerDto;
 import com.santin.survey.dto.QuestionDto;
+import com.santin.survey.dto.QuestionResultDto;
 import com.santin.survey.dto.SessionDto;
+import com.santin.survey.dto.SessionResultDto;
 import com.santin.survey.exception.InputValidationException;
 import com.santin.survey.service.SurveyService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,9 +51,9 @@ public class SurveyApi {
 
     @PostMapping("/questions/{id}/sessions/create")
     @ApiOperation(value = "Creates a new session for an issue to be voted by associates")
-    public ResponseEntity<SessionOutput> createSession(@PathVariable("id") Long idQuestion,
+    public ResponseEntity<SessionOutput> createSession(@PathVariable("id") Long questionId,
                                                        @RequestBody SessionInput sessionInput) {
-        final QuestionDto question = surveyService.getQuestion(idQuestion);
+        final QuestionDto question = surveyService.getQuestion(questionId);
 
         SessionDto sessionDto = objectMapper.convertValue(sessionInput, SessionDto.class);
         sessionDto.setQuestion(question);
@@ -56,6 +61,13 @@ public class SurveyApi {
         sessionDto = surveyService.createSession(sessionDto);
 
         return ResponseEntity.ok(objectMapper.convertValue(sessionDto, SessionOutput.class));
+    }
+
+    @GetMapping("/questions/{id}")
+    @ApiOperation(value = "Gets the question data and the voting result")
+    public ResponseEntity<QuestionResultOutput> getQuestionResult(@PathVariable("id") Long questionId) {
+        QuestionResultDto questionResult = surveyService.getQuestionResult(questionId);
+        return ResponseEntity.ok(objectMapper.convertValue(questionResult, QuestionResultOutput.class));
     }
 
     @PostMapping("/sessions/vote")
@@ -70,6 +82,13 @@ public class SurveyApi {
         AnswerDto vote = surveyService.vote(answerDto);
 
         return ResponseEntity.ok(objectMapper.convertValue(vote, AnswerOutput.class));
+    }
+
+    @GetMapping("/sessions/{id}")
+    @ApiOperation(value = "Gets the session data and the voting result")
+    public ResponseEntity<SessionResultOutput> getSessionResult(@PathVariable("id") Long sessionId) {
+        SessionResultDto sessionResult = surveyService.getSessionResult(sessionId);
+        return ResponseEntity.ok(objectMapper.convertValue(sessionResult, SessionResultOutput.class));
     }
 
     private void validateErrors(BindingResult result) {

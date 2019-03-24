@@ -26,7 +26,7 @@ public class SessionValidation {
 
     public static void validateSessionNotStartedYet(final SessionDto session) {
         if (session.getStartDateTime().isAfter(LocalDateTime.now())) {
-            throw new SessionNotStartedException(String.format("The session with ID = %s has not started yet. It will start at ",
+            throw new SessionNotStartedException(String.format("The session with ID = %s has not started yet. It will start at %s",
                     session.getId(), session.getStartDateTime()));
         }
     }
