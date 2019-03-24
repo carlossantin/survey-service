@@ -54,4 +54,12 @@ public class AnswerId implements Serializable {
     public int hashCode() {
         return Objects.hash(userId, session);
     }
+
+    @Override
+    public String toString() {
+        return "{\"AnswerId\":{"
+                + "\"userId\":\"" + userId + "\""
+                + ", \"session\":" + session
+                + "}}";
+    }
 }

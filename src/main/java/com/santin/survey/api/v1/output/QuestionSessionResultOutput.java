@@ -51,4 +51,14 @@ public class QuestionSessionResultOutput {
                 .mapToLong(AnswerAmountOutput::getAmount)
                 .sum();
     }
+
+    @Override
+    public String toString() {
+        return "{\"QuestionSessionResultOutput\":{"
+                + "\"sessionId\":\"" + sessionId + "\""
+                + ", \"sessionDescription\":\"" + sessionDescription + "\""
+                + ", \"finishDateTime\":" + finishDateTime
+                + ", \"answers\":" + answers
+                + "}}";
+    }
 }

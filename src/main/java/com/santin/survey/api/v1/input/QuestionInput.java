@@ -14,4 +14,11 @@ public class QuestionInput {
     public void setQuestionDescription(String questionDescription) {
         this.questionDescription = questionDescription;
     }
+
+    @Override
+    public String toString() {
+        return "{\"QuestionInput\":{"
+                + "\"questionDescription\":\"" + questionDescription + "\""
+                + "}}";
+    }
 }

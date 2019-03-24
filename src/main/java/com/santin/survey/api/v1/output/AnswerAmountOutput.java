@@ -20,4 +20,12 @@ public class AnswerAmountOutput {
     public void setAmount(Long amount) {
         this.amount = amount;
     }
+
+    @Override
+    public String toString() {
+        return "{\"AnswerAmountOutput\":{"
+                + "\"value\":\"" + value + "\""
+                + ", \"amount\":\"" + amount + "\""
+                + "}}";
+    }
 }

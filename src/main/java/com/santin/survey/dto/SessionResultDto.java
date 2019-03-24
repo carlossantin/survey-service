@@ -23,4 +23,12 @@ public class SessionResultDto {
     public void setAnswers(Set<SessionAnswerCompilationResultDto> answers) {
         this.answers = answers;
     }
+
+    @Override
+    public String toString() {
+        return "{\"SessionResultDto\":{"
+                + "\"session\":" + session
+                + ", \"answers\":" + answers
+                + "}}";
+    }
 }

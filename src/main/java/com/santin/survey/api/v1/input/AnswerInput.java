@@ -35,4 +35,13 @@ public class AnswerInput {
     public void setValue(String value) {
         this.value = value;
     }
+
+    @Override
+    public String toString() {
+        return "{\"AnswerInput\":{"
+                + "\"userId\":\"" + userId + "\""
+                + ", \"sessionId\":\"" + sessionId + "\""
+                + ", \"value\":\"" + value + "\""
+                + "}}";
+    }
 }

@@ -31,4 +31,11 @@ public class SessionResultOutput {
                 .sum();
     }
 
+    @Override
+    public String toString() {
+        return "{\"SessionResultOutput\":{"
+                + "\"session\":" + session
+                + ", \"answers\":" + answers
+                + "}}";
+    }
 }

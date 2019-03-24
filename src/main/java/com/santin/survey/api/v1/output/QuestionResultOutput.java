@@ -37,4 +37,13 @@ public class QuestionResultOutput {
                 .mapToLong(QuestionSessionResultOutput::getTotalVotes)
                 .sum();
     }
+
+    @Override
+    public String toString() {
+        return "{\"QuestionResultOutput\":{"
+                + "\"id\":\"" + id + "\""
+                + ", \"description\":\"" + description + "\""
+                + ", \"sessions\":" + sessions
+                + "}}";
+    }
 }

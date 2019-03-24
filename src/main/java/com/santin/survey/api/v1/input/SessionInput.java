@@ -31,4 +31,13 @@ public class SessionInput {
     public void setFinishDateTime(LocalDateTime finishDateTime) {
         this.finishDateTime = finishDateTime;
     }
+
+    @Override
+    public String toString() {
+        return "{\"SessionInput\":{"
+                + "\"description\":\"" + description + "\""
+                + ", \"startDateTime\":" + startDateTime
+                + ", \"finishDateTime\":" + finishDateTime
+                + "}}";
+    }
 }

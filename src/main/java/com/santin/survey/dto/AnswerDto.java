@@ -29,4 +29,13 @@ public class AnswerDto {
     public void setValue(String value) {
         this.value = value;
     }
+
+    @Override
+    public String toString() {
+        return "{\"AnswerDto\":{"
+                + "\"userId\":\"" + userId + "\""
+                + ", \"value\":\"" + value + "\""
+                + ", \"session\":" + session
+                + "}}";
+    }
 }

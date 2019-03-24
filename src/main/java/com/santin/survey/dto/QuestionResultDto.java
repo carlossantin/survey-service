@@ -32,4 +32,12 @@ public class QuestionResultDto {
         this.sessions = sessions;
     }
 
+    @Override
+    public String toString() {
+        return "{\"QuestionResultDto\":{"
+                + "\"id\":\"" + id + "\""
+                + ", \"description\":\"" + description + "\""
+                + ", \"sessions\":" + sessions
+                + "}}";
+    }
 }

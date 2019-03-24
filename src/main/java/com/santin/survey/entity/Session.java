@@ -88,4 +88,15 @@ public class Session {
     public int hashCode() {
         return Objects.hash(id, description, startDateTime, finishDateTime, question);
     }
+
+    @Override
+    public String toString() {
+        return "{\"Session\":{"
+                + "\"id\":\"" + id + "\""
+                + ", \"description\":\"" + description + "\""
+                + ", \"startDateTime\":" + startDateTime
+                + ", \"finishDateTime\":" + finishDateTime
+                + ", \"question\":" + question
+                + "}}";
+    }
 }

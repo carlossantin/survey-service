@@ -12,4 +12,10 @@ public class ErrorOutput {
         return message;
     }
 
+    @Override
+    public String toString() {
+        return "{\"ErrorOutput\":{"
+                + "\"message\":\"" + message + "\""
+                + "}}";
+    }
 }

@@ -49,4 +49,15 @@ public class SessionOutput {
     public void setFinishDateTime(LocalDateTime finishDateTime) {
         this.finishDateTime = finishDateTime;
     }
+
+    @Override
+    public String toString() {
+        return "{\"SessionOutput\":{"
+                + "\"id\":\"" + id + "\""
+                + ", \"question\":" + question
+                + ", \"description\":\"" + description + "\""
+                + ", \"startDateTime\":" + startDateTime
+                + ", \"finishDateTime\":" + finishDateTime
+                + "}}";
+    }
 }

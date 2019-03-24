@@ -36,4 +36,12 @@ public class QuestionDto {
     public int hashCode() {
         return Objects.hash(id, description);
     }
+
+    @Override
+    public String toString() {
+        return "{\"QuestionDto\":{"
+                + "\"id\":\"" + id + "\""
+                + ", \"description\":\"" + description + "\""
+                + "}}";
+    }
 }

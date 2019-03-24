@@ -67,4 +67,15 @@ public class SessionDto {
     public int hashCode() {
         return Objects.hash(id, question, description, startDateTime, finishDateTime);
     }
+
+    @Override
+    public String toString() {
+        return "{\"SessionDto\":{"
+                + "\"id\":\"" + id + "\""
+                + ", \"question\":" + question
+                + ", \"description\":\"" + description + "\""
+                + ", \"startDateTime\":" + startDateTime
+                + ", \"finishDateTime\":" + finishDateTime
+                + "}}";
+    }
 }

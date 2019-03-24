@@ -55,4 +55,12 @@ public class Question {
     public int hashCode() {
         return Objects.hash(id, description);
     }
+
+    @Override
+    public String toString() {
+        return "{\"Question\":{"
+                + "\"id\":\"" + id + "\""
+                + ", \"description\":\"" + description + "\""
+                + "}}";
+    }
 }

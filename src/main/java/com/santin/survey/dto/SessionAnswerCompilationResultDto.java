@@ -28,4 +28,12 @@ public class SessionAnswerCompilationResultDto {
     public void setAmount(Long amount) {
         this.amount = amount;
     }
+
+    @Override
+    public String toString() {
+        return "{\"SessionAnswerCompilationResultDto\":{"
+                + "\"value\":\"" + value + "\""
+                + ", \"amount\":\"" + amount + "\""
+                + "}}";
+    }
 }

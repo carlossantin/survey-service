@@ -41,4 +41,14 @@ public class QuestionSessionResultDto {
     public void setAnswers(Set<SessionAnswerCompilationResultDto> answers) {
         this.answers = answers;
     }
+
+    @Override
+    public String toString() {
+        return "{\"QuestionSessionResultDto\":{"
+                + "\"sessionId\":\"" + sessionId + "\""
+                + ", \"sessionDescription\":\"" + sessionDescription + "\""
+                + ", \"finishDateTime\":" + finishDateTime
+                + ", \"answers\":" + answers
+                + "}}";
+    }
 }

@@ -31,4 +31,13 @@ public class AnswerOutput {
     public void setSession(SessionDto session) {
         this.session = session;
     }
+
+    @Override
+    public String toString() {
+        return "{\"AnswerOutput\":{"
+                + "\"userId\":\"" + userId + "\""
+                + ", \"value\":\"" + value + "\""
+                + ", \"session\":" + session
+                + "}}";
+    }
 }
