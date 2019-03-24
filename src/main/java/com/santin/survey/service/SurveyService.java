@@ -67,7 +67,7 @@ public class SurveyService {
     }
 
     public QuestionDto getQuestion(Long id) {
-        Optional<Question> question = questionRepository.findById(id);
+        final Optional<Question> question = questionRepository.findById(id);
         if (question.isPresent()) {
             return objectMapper.convertValue(question.get(), QuestionDto.class);
         }
@@ -75,7 +75,7 @@ public class SurveyService {
     }
 
     public SessionDto createSession(final SessionDto sessionDto) {
-        fixSessionStartAndFinishTimes(sessionDto);
+        setDefaultSessionStartAndFinishTimes(sessionDto);
 
         SessionValidation.validateSessionCreation(sessionDto);
 
@@ -84,7 +84,7 @@ public class SurveyService {
         return objectMapper.convertValue(session, SessionDto.class);
     }
 
-    private void fixSessionStartAndFinishTimes(SessionDto sessionDto) {
+    private void setDefaultSessionStartAndFinishTimes(SessionDto sessionDto) {
         sessionDto.setStartDateTime(Optional.ofNullable(sessionDto.getStartDateTime())
                 .orElse(LocalDateTime.now()));
         sessionDto.setFinishDateTime(Optional.ofNullable(sessionDto.getFinishDateTime())
@@ -104,10 +104,7 @@ public class SurveyService {
         SessionValidation.validateSessionAlreadyFinished(answerDto.getSession());
         AnswerValidation.validateAnswer(answerDto.getValue());
 
-        Answer answer = new Answer();
-        Session session = objectMapper.convertValue(answerDto.getSession(), Session.class);
-        answer.setId(new AnswerId(answerDto.getUserId(), session));
-        answer.setValue(answerDto.getValue());
+        Answer answer = convertToAnswerEntity(answerDto);
 
         try {
             answerRepository.insertAnswer(answer);
@@ -120,16 +117,28 @@ public class SurveyService {
         return answerDto;
     }
 
+    private Answer convertToAnswerEntity(AnswerDto answerDto) {
+        Answer answer = new Answer();
+        Session session = objectMapper.convertValue(answerDto.getSession(), Session.class);
+        answer.setId(new AnswerId(answerDto.getUserId(), session));
+        answer.setValue(answerDto.getValue());
+        return answer;
+    }
+
     public SessionResultDto getSessionResult(Long sessionId) {
         Optional<Session> session = sessionRepository.findById(sessionId);
         if (!session.isPresent()) {
             throw new SessionNotFoundException(String.format("The session having ID = %s does not exist", sessionId));
         }
 
+        return toSessionResultDto(sessionId, session.get());
+    }
+
+    private SessionResultDto toSessionResultDto(Long sessionId, Session session) {
         Set<SessionAnswerCompilationResultDto> resultsForSession =
                 new HashSet<>(sessionCompilationRepository.getResultsForSessionBySessionId(sessionId));
         SessionResultDto sessionResultDto = new SessionResultDto();
-        sessionResultDto.setSession(objectMapper.convertValue(session.get(), SessionDto.class));
+        sessionResultDto.setSession(objectMapper.convertValue(session, SessionDto.class));
         sessionResultDto.setAnswers(resultsForSession);
         return sessionResultDto;
     }
@@ -140,14 +149,17 @@ public class SurveyService {
             throw new QuestionNotFoundException(String.format("The question having ID = %s does not exist", questionId));
         }
 
+        return toQuestionResultDto(questionId, question.get());
+    }
+
+    private QuestionResultDto toQuestionResultDto(Long questionId, Question question) {
         Map<Long, List<QuestionAnswerCompilationResultDto>> sessions = questionCompilationRepository.getResultsForQuestionByQuestionId(questionId)
                 .stream().collect(Collectors.groupingBy(QuestionAnswerCompilationResultDto::getSessionId));
 
         QuestionResultDto questionResultDto = new QuestionResultDto();
         questionResultDto.setId(questionId);
-        questionResultDto.setDescription(question.get().getDescription());
+        questionResultDto.setDescription(question.getDescription());
         questionResultDto.setSessions(sessions.entrySet().stream().map(this::toQuestionSessionResultDto).collect(Collectors.toSet()));
-
         return questionResultDto;
     }
 
