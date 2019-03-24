@@ -1,5 +1,6 @@
 package com.santin.survey.api.v1;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.santin.survey.api.v1.input.AnswerInput;
 import com.santin.survey.api.v1.input.QuestionInput;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/survey")
@@ -38,6 +40,12 @@ public class SurveyApi {
     public SurveyApi(SurveyService surveyService, ObjectMapper objectMapper) {
         this.surveyService = surveyService;
         this.objectMapper = objectMapper;
+    }
+
+    @GetMapping("/questions")
+    @ApiOperation(value = "Gets all stored questions")
+    public ResponseEntity<QuestionOutput> getAllQuestions() {
+        return ResponseEntity.ok(objectMapper.convertValue(surveyService.getAllQuestions(), new TypeReference<List<QuestionOutput>>(){}));
     }
 
     @PostMapping("/questions/create")

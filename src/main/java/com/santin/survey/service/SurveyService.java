@@ -1,5 +1,6 @@
 package com.santin.survey.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.santin.survey.dto.AnswerDto;
 import com.santin.survey.dto.QuestionAnswerCompilationResultDto;
@@ -17,9 +18,7 @@ import com.santin.survey.exception.DuplicatedVoteException;
 import com.santin.survey.exception.QuestionNotFoundException;
 import com.santin.survey.exception.SessionNotFoundException;
 import com.santin.survey.repository.AnswerRepository;
-import com.santin.survey.repository.QuestionCompilationRepository;
 import com.santin.survey.repository.QuestionRepository;
-import com.santin.survey.repository.SessionCompilationRepository;
 import com.santin.survey.repository.SessionRepository;
 import com.santin.survey.validation.AnswerValidation;
 import com.santin.survey.validation.SessionValidation;
@@ -40,8 +39,6 @@ public class SurveyService {
     private final QuestionRepository questionRepository;
     private final SessionRepository sessionRepository;
     private final AnswerRepository answerRepository;
-    private final SessionCompilationRepository sessionCompilationRepository;
-    private final QuestionCompilationRepository questionCompilationRepository;
     private final ObjectMapper objectMapper;
 
     private static final long DEFAULT_SESSION_DURATION_SECONDS = 60L;
@@ -49,14 +46,10 @@ public class SurveyService {
     public SurveyService(final QuestionRepository questionRepository,
                          final SessionRepository sessionRepository,
                          final AnswerRepository answerRepository,
-                         final SessionCompilationRepository sessionCompilationRepository,
-                         final QuestionCompilationRepository questionCompilationRepository,
                          final ObjectMapper objectMapper) {
         this.questionRepository = questionRepository;
         this.sessionRepository = sessionRepository;
         this.answerRepository = answerRepository;
-        this.sessionCompilationRepository = sessionCompilationRepository;
-        this.questionCompilationRepository = questionCompilationRepository;
         this.objectMapper = objectMapper;
     }
 
@@ -68,10 +61,13 @@ public class SurveyService {
 
     public QuestionDto getQuestion(Long id) {
         final Optional<Question> question = questionRepository.findById(id);
-        if (question.isPresent()) {
-            return objectMapper.convertValue(question.get(), QuestionDto.class);
-        }
-        throw new QuestionNotFoundException(String.format("The question having ID = %s does not exist", id));
+        Question questionToConvert = question.orElseThrow(() -> new QuestionNotFoundException(String.format("The question having ID = %s does not exist", id)));
+        return objectMapper.convertValue(questionToConvert, QuestionDto.class);
+    }
+
+    public List<QuestionDto> getAllQuestions() {
+        List<Question> allQuestions = questionRepository.findAll();
+        return objectMapper.convertValue(allQuestions, new TypeReference<List<QuestionDto>>(){});
     }
 
     public SessionDto createSession(final SessionDto sessionDto) {
@@ -93,10 +89,8 @@ public class SurveyService {
 
     public SessionDto getSession(Long id) {
         Optional<Session> session = sessionRepository.findById(id);
-        if (session.isPresent()) {
-            return objectMapper.convertValue(session.get(), SessionDto.class);
-        }
-        throw new SessionNotFoundException(String.format("The session having ID = %s does not exist", id));
+        Session sessionToConvert = session.orElseThrow(() -> new SessionNotFoundException(String.format("The session having ID = %s does not exist", id)));
+        return objectMapper.convertValue(sessionToConvert, SessionDto.class);
     }
 
     public AnswerDto vote(AnswerDto answerDto) {
@@ -127,16 +121,13 @@ public class SurveyService {
 
     public SessionResultDto getSessionResult(Long sessionId) {
         Optional<Session> session = sessionRepository.findById(sessionId);
-        if (!session.isPresent()) {
-            throw new SessionNotFoundException(String.format("The session having ID = %s does not exist", sessionId));
-        }
-
-        return toSessionResultDto(sessionId, session.get());
+        Session sessionToConvert = session.orElseThrow(() -> new SessionNotFoundException(String.format("The session having ID = %s does not exist", sessionId)));
+        return toSessionResultDto(sessionId, sessionToConvert);
     }
 
     private SessionResultDto toSessionResultDto(Long sessionId, Session session) {
         Set<SessionAnswerCompilationResultDto> resultsForSession =
-                new HashSet<>(sessionCompilationRepository.getResultsForSessionBySessionId(sessionId));
+                new HashSet<>(sessionRepository.getResultsForSessionBySessionId(sessionId));
         SessionResultDto sessionResultDto = new SessionResultDto();
         sessionResultDto.setSession(objectMapper.convertValue(session, SessionDto.class));
         sessionResultDto.setAnswers(resultsForSession);
@@ -145,15 +136,12 @@ public class SurveyService {
 
     public QuestionResultDto getQuestionResult(Long questionId) {
         Optional<Question> question = questionRepository.findById(questionId);
-        if (!question.isPresent()) {
-            throw new QuestionNotFoundException(String.format("The question having ID = %s does not exist", questionId));
-        }
-
-        return toQuestionResultDto(questionId, question.get());
+        Question questionToConvert = question.orElseThrow(() -> new QuestionNotFoundException(String.format("The question having ID = %s does not exist", questionId)));
+        return toQuestionResultDto(questionId, questionToConvert);
     }
 
     private QuestionResultDto toQuestionResultDto(Long questionId, Question question) {
-        Map<Long, List<QuestionAnswerCompilationResultDto>> sessions = questionCompilationRepository.getResultsForQuestionByQuestionId(questionId)
+        Map<Long, List<QuestionAnswerCompilationResultDto>> sessions = questionRepository.getResultsForQuestionByQuestionId(questionId)
                 .stream().collect(Collectors.groupingBy(QuestionAnswerCompilationResultDto::getSessionId));
 
         QuestionResultDto questionResultDto = new QuestionResultDto();

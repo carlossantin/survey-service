@@ -5,6 +5,14 @@ public class SessionAnswerCompilationResultDto {
     private String value;
     private Long amount;
 
+    public SessionAnswerCompilationResultDto() {
+    }
+
+    public SessionAnswerCompilationResultDto(String value, Long amount) {
+        this.value = value;
+        this.amount = amount;
+    }
+
     public String getValue() {
         return value;
     }

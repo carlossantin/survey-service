@@ -27,9 +27,7 @@ import com.santin.survey.exception.SessionExpiredException;
 import com.santin.survey.exception.SessionNotFoundException;
 import com.santin.survey.exception.SessionNotStartedException;
 import com.santin.survey.repository.AnswerRepository;
-import com.santin.survey.repository.QuestionCompilationRepository;
 import com.santin.survey.repository.QuestionRepository;
-import com.santin.survey.repository.SessionCompilationRepository;
 import com.santin.survey.repository.SessionRepository;
 import org.junit.Assert;
 import org.junit.Before;
@@ -63,10 +61,6 @@ public class SurveyServiceTest {
     private SessionRepository sessionRepository;
     @Mock
     private AnswerRepository answerRepository;
-    @Mock
-    private SessionCompilationRepository sessionCompilationRepository;
-    @Mock
-    private QuestionCompilationRepository questionCompilationRepository;
     @Spy
     private ObjectMapper objectMapper;
 
@@ -222,7 +216,7 @@ public class SurveyServiceTest {
     }
 
     private void mockGetResultsForSessionBySessionId(List<SessionAnswerCompilationResultDto> answerCompilationResult) {
-        when(sessionCompilationRepository.getResultsForSessionBySessionId(any())).thenReturn(answerCompilationResult);
+        when(sessionRepository.getResultsForSessionBySessionId(any())).thenReturn(answerCompilationResult);
     }
 
     @Test(expected = QuestionNotFoundException.class)
@@ -262,6 +256,6 @@ public class SurveyServiceTest {
     }
 
     private void mockGetResultsForQuestionByQuestionId(List<QuestionAnswerCompilationResultDto> answerCompilationResult) {
-        when(questionCompilationRepository.getResultsForQuestionByQuestionId(any())).thenReturn(answerCompilationResult);
+        when(questionRepository.getResultsForQuestionByQuestionId(any())).thenReturn(answerCompilationResult);
     }
 }

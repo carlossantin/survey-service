@@ -12,6 +12,19 @@ public class QuestionAnswerCompilationResultDto {
     private String value;
     private Long amount;
 
+    public QuestionAnswerCompilationResultDto() {
+    }
+
+    public QuestionAnswerCompilationResultDto(Long questionId, String questionDescription, Long sessionId, String sessionDescription, LocalDateTime finishDateTime, String value, Long amount) {
+        this.questionId = questionId;
+        this.questionDescription = questionDescription;
+        this.sessionId = sessionId;
+        this.sessionDescription = sessionDescription;
+        this.finishDateTime = finishDateTime;
+        this.value = value;
+        this.amount = amount;
+    }
+
     public Long getQuestionId() {
         return questionId;
     }
