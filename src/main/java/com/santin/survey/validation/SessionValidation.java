@@ -13,8 +13,9 @@ public class SessionValidation {
         if (session.getStartDateTime().isAfter(session.getFinishDateTime())) {
             throw new InputValidationException("The start datetime must be lower than the finish datetime");
         }
-
-        validateSessionAlreadyFinished(session);
+        if (session.getFinishDateTime().isBefore(LocalDateTime.now())) {
+            throw new InputValidationException("The finish datetime must be higher than the current datetime");
+        }
     }
 
     public static void validateSessionAlreadyFinished(final SessionDto session) {
