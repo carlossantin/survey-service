@@ -14,7 +14,7 @@ The goal of this project is to build a backend solution to perform surveys. This
 ## Running the application
  
 
-## Business Decision
+## Business decisions
 
  The decision of allowing the creation of several sessions for the same question is based on the idea that a question could be reused to vote several times, like, for example, a team deciding every morning in which restaurant they will go to have a lunch.
  
@@ -63,4 +63,5 @@ The goal of this project is to build a backend solution to perform surveys. This
  Swagger is an easy usage framework to document APIs generating a interactive documentation that allows users to immediately test the APIs operations without a need of a developed frontend neither the usage of complex commands from command line or third part tools.
  
  **Docker**
+ 
  Docker was used in order to configure the database creating a container having all configurations needed to run the application. It was used also to make easier the publish in a cloud machine. 
