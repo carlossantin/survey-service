@@ -50,7 +50,11 @@ public class SurveyApi {
     }
 
     @PostMapping("/questions/{id}/sessions/create")
-    @ApiOperation(value = "Creates a new session for an issue to be voted by associates")
+    @ApiOperation(value = "Creates a new session for a question to be voted by associates. " +
+            "A session must be related to a saved question. " +
+            "The fields description, startDateTime and finishDateTime are optional. " +
+            "If you don't specify the startDateTime, it will be assumed that it is the current time. " +
+            "If you don't specify the finishDateTime, it will be assumed that it is the startDateTime plus one minute.")
     public ResponseEntity<SessionOutput> createSession(@PathVariable("id") Long questionId,
                                                        @RequestBody SessionInput sessionInput) {
         final QuestionDto question = surveyService.getQuestion(questionId);
@@ -64,14 +68,14 @@ public class SurveyApi {
     }
 
     @GetMapping("/questions/{id}")
-    @ApiOperation(value = "Gets the question data and the voting result")
+    @ApiOperation(value = "Gets the question data and the voting result for each session related to the question")
     public ResponseEntity<QuestionResultOutput> getQuestionResult(@PathVariable("id") Long questionId) {
         QuestionResultDto questionResult = surveyService.getQuestionResult(questionId);
         return ResponseEntity.ok(objectMapper.convertValue(questionResult, QuestionResultOutput.class));
     }
 
     @PostMapping("/sessions/vote")
-    @ApiOperation(value = "Allows an associate to vote for a question related to an opened session")
+    @ApiOperation(value = "Allows an associate to vote for a question related to an opened session. The allowed values are SIM or NAO")
     public ResponseEntity<AnswerOutput> voteQuestion(@RequestBody @Valid AnswerInput answerInput, BindingResult result) {
         validateErrors(result);
         final SessionDto session = surveyService.getSession(answerInput.getSessionId());
